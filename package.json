@@ -1,0 +1,37 @@
+{
+  "name": "fk-rn-androidapp-trial",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node_modules/react-native/packager/packager.sh",
+    "build": "source ~/.bash_profile && rm -rf dist && mkdir dist && react-native bundle --platform ios --bundle-output ./dist/reviews.ios.jsbundle --dev true --entry-file index.ios.js",
+    "build_with_asset": "source ~/.bash_profile && rm -rf dist && mkdir dist && react-native bundle --platform ios --bundle-output ./dist/reviews.ios.jsbundle --dev true --entry-file index.ios.js --assets-dest ./dist/",
+    "cdn-push-resource": "bash node_modules/react-native-shared/utils/deployers/CDNDeploy.sh",
+    "test": "echo NO_TESTS_YET"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anilchembath/fk-rn-androidapp-trial"
+  },
+  "keywords": [
+    "react-native",
+    "react-native-flipkart"
+  ],
+  "author": "flipviews",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anilchembath/fk-rn-androidapp-trial/issues"
+  },
+  "homepage": "https://github.com/anilchembath/fk-rn-androidapp-trial",
+  "dependencies": {
+    "keymirror": "^0.1.1",
+    "react-native": "^0.19.0",
+    "react-timer-mixin": "^0.13.3",
+    "immutable": "^3.7.6",
+    "redux": "^3.0.4",
+    "react-redux": "^3.0.1",
+    "redux-thunk": "^1.0.2",
+    "react-native-shared": "git+ssh://git@github.com:Flipkart/react-native-shared.git#android-trial"
+  }
+}
