@@ -7,4 +7,4 @@
 import { AppRegistry } from 'react-native';
 import App from './components/android';
 
-AppRegistry.registerComponent('BrowsePage', () => App);
+AppRegistry.registerComponent('ReactWriteReview', () => App);

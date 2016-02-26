@@ -41,21 +41,41 @@ var ProductCell = React.createClass({
     return { uri };
   },
   getSellingPrice: function(product){
-     console.log(product);
+    if(product && product.pricing){
       let prices= product.pricing.prices;
-       console.log(prices);
         for (var price in prices) {
          if(price.name === "Selling Price"){
-           console.log(price.value);
             return price.value;
          }
        }
+    }
        return "";
+  },
+  getFinalDiscount: function(product){
+     return product && product.pricing ? product.pricing.totalDiscount : 0;
+  },
+  getFinalPrice: function(product){
+     return product && product.pricing ? product.pricing.finalPrice.value : "";
+  },
+  showAvailability: function(product){
+     return product.availability &&  product.availability.showMessage  ? product.availability.showMessage : "";
+  },
+  isProductAvailable: function(product){
+     return product.availability &&  product.availability.intent === "negative"  ? false : true;
+  },
+  getAvailabilityMessage: function(product){
+     return product.availability &&  product.availability.message  ? product.availability.message : "";
+  },
+  getAvailabilityIntent: function(product){
+     return product.availability &&  product.availability.intent  ? product.availability.intent : "";
   },
   render: function() {
    // var criticsScore = this.props.movie.ratings.critics_score;
    let product  =this.props.product;
    let sellingPrice = this.getSellingPrice(product);
+   let finalPrice = this.getFinalPrice(product);
+   let dicount = this.getFinalDiscount(product);
+   let isProductAvailable = this.isProductAvailable(product);
     var TouchableElement = TouchableHighlight;
     if (Platform.OS === 'android') {
       TouchableElement = TouchableNativeFeedback;
@@ -89,26 +109,36 @@ var ProductCell = React.createClass({
                   </View>
                  : null
               }
-              <View>
-                <View style={{flex:1,flexDirection:'row'}}>
-                  <Text style={styles.productTitle}   numberOfLines={1}>
-                    {product.pricing.finalPrice.value}
-                  </Text>
-                  {/* sellingPrice &&  sellingPrice > product.pricing.finalPrice.value ?
-                      <Text style={styles.specialPrice}   numberOfLines={1}>
-                          {sellingPrice}
-                      </Text>
-                     : null
-                   */}
-                   {product.pricing.totalDiscount &&  product.pricing.totalDiscount>0 ?
-                      <Text style={styles.totalDiscount}   numberOfLines={1}>
-                          {product.pricing.totalDiscount} %
-                      </Text>
-                     : null
-                   }
+              {isProductAvailable ? 
+                  <View style={{flex:1,flexDirection:'row'}}>
+                    
+                    <Text style={styles.productTitle}   numberOfLines={1}>
+                      {finalPrice}
+                    </Text>
+                    {/* sellingPrice &&  sellingPrice > product.pricing.finalPrice.value ?
+                        <Text style={styles.specialPrice}   numberOfLines={1}>
+                            {sellingPrice}
+                        </Text>
+                       : null
+                     */}
+                     {dicount>0 ?
+                        <Text style={styles.totalDiscount}   numberOfLines={1}>
+                            {dicount} %
+                        </Text>
+                       : null
+                     }
 
-                </View>
-              </View>
+                  </View>
+                : <View View style={{flex:1,flexDirection:'row'}}>
+                      {this.showAvailability(product) ? 
+                        <View style={{flex:1,flexDirection:'row'}}>
+                          <Text style={[styles.availabilityMessage,styles[product.availability.intent]]}   numberOfLines={1}>
+                            {this.getAvailabilityMessage(product)}
+                          </Text>
+                        </View>  
+                    : null }
+                   </View> 
+                }                
             </View>
           </View>
         </TouchableElement>
@@ -127,13 +157,25 @@ var styles = StyleSheet.create({
   productTitle: {
     flex: 1,
     fontSize: 30,
-    fontWeight: 'bold',
+    //fontWeight: 'bold',
     fontFamily: 'RobotoBold',
     marginBottom: 5
   },
+  availabilityMessage: {
+    flex: 1,
+    fontSize: 25,
+    fontFamily: 'RobotoBold',
+    marginBottom: 5
+  },
+  negative: {
+    color:'red'
+  },
+  positive: {
+    color:'green'
+  },
   subTitle: {
-    color: '#333333',
-    fontFamily: 'Roboto',
+    //color: '#333333',
+    //fontFamily: 'Roboto',
     marginBottom:10,
     fontSize: 22,
   },

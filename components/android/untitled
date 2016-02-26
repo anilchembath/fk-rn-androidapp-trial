@@ -1,0 +1,29 @@
+const { produts } = this.props
+    console.log(produts);
+    var content = "";
+    if(produts && products) {
+     content =  <ListView
+          ref="listview"
+          renderSeparator={this.renderSeparator.bind(this)}
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow.bind(this)}
+          onEndReached={this.onEndReached.bind(this)}
+          automaticallyAdjustContentInsets={false}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps={true}
+          showsVerticalScrollIndicator={false} />;
+    } else {
+      content = <NoProducts/>
+    }
+
+
+var NoProducts = React.createClass({
+  render: function() {
+    var text = 'No products found';
+    return (
+      <View style={[styles.container, styles.centerText]}>
+        <Text style={styles.noProducts}>{text}</Text>
+      </View>
+    );
+  }
+});

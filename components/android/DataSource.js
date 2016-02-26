@@ -18,10 +18,9 @@ export function getProducts(productID) {
     return async function () {
 
         try {
-            let url = `/2/discover/getSearch?store=search.flipkart.com&start=0&count=10&disableMultipleImage=true&ads-offset=1&q=mobile&sqid=41f6a14d-9d22-4954-b8da-a82713b3114c&ssid=08f1dd69-a319-4930-b4bd-bd0d5ad09f23`;
+            let url = `/3/discover/getSearch?store=search.flipkart.com&start=0&count=20&disableMultipleImage=true&ads-offset=1&q=mobile&sqid=982d815a-dcff-49b6-92d4-56a1f16a9e17&ssid=875034af-63dd-4037-a67c-a22f7e7c148b`;
 
             let response = await getJSON(ApiHelper.get(url,constants));
-            console.log(response);
             return response;
         }
         catch(e) {
