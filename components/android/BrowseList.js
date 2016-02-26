@@ -43,13 +43,6 @@ var API_KEYS = [
 
 import ReactComponentWithStore from 'react-native-shared/components/common/ReactComponentWithStore.js';
 
-var resultsCache = {
-  dataForQuery: {},
-  nextPageNumberForQuery: {},
-  totalForQuery: {},
-};
-
-var LOADING = {};
 
 export default class BrowseList extends ReactComponentWithStore{
   constructor(args){
@@ -64,8 +57,10 @@ export default class BrowseList extends ReactComponentWithStore{
           }
 
         }),
-        queryNumber: 0,
+        startIndex: 0,
+        product_count: 10,
         products : [],
+        hasMoreRecords: true
 
       }
   }
@@ -76,41 +71,41 @@ export default class BrowseList extends ReactComponentWithStore{
 
   async componentDidMount() {
     let actionCreator = this.getActionCreator()
-    actionCreator.getProducts(0);
+    actionCreator.getProducts(this.state.startIndex,this.state.product_count );
   }
 
   subscribeToStore(store){
       store.subscribe(()=>{
           let newState = store.getState();
           let productList = newState.data.productList;
-          console.log("subscribeToStore", productList);
-          if(Object.keys(productList).length > 0){
-            let dataSource = this.getDataSource(productList);
-            this.setState({
-              dataSource : dataSource,
-              isLoading: false
-            });
+          let productKeys = Object.keys(productList); 
+          let productCount = productKeys.length;
+          if(productCount> 0){
+              let startIndex = this.state.startIndex + productCount;
+              var products = this.state.products;
+              for(let porductId in productList){
+                products[porductId]  = productList[porductId];
+              }
+              let dataSource = this.getDataSource(products);
+              this.setState({
+                products: products,
+                dataSource : dataSource,
+                isLoading: false,
+                startIndex: startIndex,
+                hasMoreRecords: productCount == this.state.product_count
+              });
           }
-
       });
   }
   getDummyProducts(){
     return ServiceResponse.default.RESPONSE.product;
   }
 
-  hasMore(): boolean {
-    var query = this.state.filter;
-    if (!resultsCache.dataForQuery[query]) {
-      return true;
-    }
-    return (
-      resultsCache.totalForQuery[query] !==
-      resultsCache.dataForQuery[query].length
-    );
-  }
-
   onEndReached() {
-    return true;
+    if(this.state.hasMoreRecords){
+       let actionCreator = this.getActionCreator()
+        actionCreator.getProducts(this.state.startIndex,this.state.product_count);
+    }
   }
 
   getDataSource(products: Array<any>): ListView.DataSource {
@@ -161,7 +156,6 @@ export default class BrowseList extends ReactComponentWithStore{
   render() {
 
      var content = "";
-     console.log("render", this.state.isLoading);
      if(this.state.isLoading){
         content =  <View  style={[styles.container, styles.loader]}>
             <ProgressBarAndroid styleAttr="Large"/>

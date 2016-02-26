@@ -51,6 +51,7 @@ var ProductCell = React.createClass({
     }
        return "";
   },
+
   getFinalDiscount: function(product){
      return product && product.pricing ? product.pricing.totalDiscount : 0;
   },
@@ -69,6 +70,7 @@ var ProductCell = React.createClass({
   getAvailabilityIntent: function(product){
      return product.availability &&  product.availability.intent  ? product.availability.intent : "";
   },
+
   render: function() {
    // var criticsScore = this.props.movie.ratings.critics_score;
    let product  =this.props.product;
@@ -87,9 +89,6 @@ var ProductCell = React.createClass({
           onShowUnderlay={this.props.onHighlight}
           onHideUnderlay={this.props.onUnhighlight}>
           <View style={styles.row}>
-            {/* $FlowIssue #7363964 - There's a bug in Flow where you cannot
-              * omit a property or set it to undefined if it's inside a shape,
-              * even if it isn't required */}
             <Image
               source={this.getImageSource(product)}
               style={styles.cellImage}
@@ -112,7 +111,7 @@ var ProductCell = React.createClass({
               {isProductAvailable ? 
                   <View style={{flex:1,flexDirection:'row'}}>
                     
-                    <Text style={styles.productTitle}   numberOfLines={1}>
+                    <Text style={styles.productPrize}   numberOfLines={1}>
                       {finalPrice}
                     </Text>
                     {/* sellingPrice &&  sellingPrice > product.pricing.finalPrice.value ?
@@ -156,8 +155,15 @@ var styles = StyleSheet.create({
   },
   productTitle: {
     flex: 1,
-    fontSize: 30,
+    fontSize: 25,
     //fontWeight: 'bold',
+    fontFamily: 'RobotoBold',
+    marginBottom: 5
+  },
+  productPrize: {
+    flex: 1,
+    fontSize: 25,
+    fontWeight: 'bold',
     fontFamily: 'RobotoBold',
     marginBottom: 5
   },
@@ -189,12 +195,11 @@ var styles = StyleSheet.create({
 
   },
   totalDiscount: {
-    color: '#333333',
     fontFamily: 'Roboto',
     marginBottom:5,
     marginLeft:20,
-    fontSize:30
-
+    fontSize:25,
+    color:'green'
   },
   row: {
     backgroundColor: 'white',
