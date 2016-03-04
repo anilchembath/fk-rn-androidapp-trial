@@ -171,7 +171,6 @@ var ListPage = React.createClass({
     highlightRowFunc: (sectionID: ?number | string, rowID: ?number | string) => void,
   ) {
     let productData = product.value;
-    //console.log(productData);
     return (
       <ProductCell
         key={productData.id}
