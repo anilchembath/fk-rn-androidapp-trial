@@ -64,7 +64,7 @@ export default class BrowseList extends ReactComponentWithStore{
 		products : [],
 		hasMoreRecords: true,
 		sortby:'popularity',
-		sortOptions:'&sort=price_desc'
+		sortOptions:''
 
 	  }
   }
