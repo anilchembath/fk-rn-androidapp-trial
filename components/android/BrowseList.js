@@ -78,6 +78,7 @@ export default class BrowseList extends ReactComponentWithStore{
       store.subscribe(()=>{
           let newState = store.getState();
           let productList = newState.data.productList;
+          console.log(productList);
           let productKeys = Object.keys(productList); 
           let productCount = productKeys.length;
           if(productCount> 0){

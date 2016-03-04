@@ -85,14 +85,13 @@ var ProductCell = React.createClass({
     return (
       <View>
         <TouchableElement
-          onPress={this.props.onSelect}
           onShowUnderlay={this.props.onHighlight}
           onHideUnderlay={this.props.onUnhighlight}>
           <View style={styles.row}>
             <Image
               source={this.getImageSource(product)}
               style={styles.cellImage}
-              xresizeMode={Image.resizeMode.contain}
+              resizeMode={Image.resizeMode.contain}
             />
             <View style={styles.textContainer}>
               <View >
@@ -109,24 +108,29 @@ var ProductCell = React.createClass({
                  : null
               }
               {isProductAvailable ? 
-                  <View style={{flex:1,flexDirection:'row'}}>
+                  <View style={{flex:1,flexDirection:'column'}}>
+                    <View style={{flex:1,flexDirection:'row'}}>
                     
-                    <Text style={styles.productPrize}   numberOfLines={1}>
-                      {finalPrice}
-                    </Text>
-                    {/* sellingPrice &&  sellingPrice > product.pricing.finalPrice.value ?
-                        <Text style={styles.specialPrice}   numberOfLines={1}>
-                            {sellingPrice}
+                        <Text style={styles.productPrize}   numberOfLines={1}>
+                          {finalPrice}
                         </Text>
+                         {dicount>0 ?
+                            <Text style={styles.totalDiscount}   numberOfLines={1}>
+                                {dicount} %
+                            </Text>
+                           : null
+                         }
+                      </View>
+                      {product.tags ? 
+                       <View style={{flex:1,flexDirection:'row'}}>
+                        {product.tags.map(tag =>
+                            <View key={tag} style={styles.tags}>
+                                <Text>{tag} </Text>
+                            </View>
+                          )}
+                       </View>
                        : null
-                     */}
-                     {dicount>0 ?
-                        <Text style={styles.totalDiscount}   numberOfLines={1}>
-                            {dicount} %
-                        </Text>
-                       : null
-                     }
-
+                      }
                   </View>
                 : <View View style={{flex:1,flexDirection:'row'}}>
                       {this.showAvailability(product) ? 
@@ -150,26 +154,24 @@ var styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     alignItems:'flex-start',
-    paddingLeft: 20,
-    paddingTop: 10
+    paddingLeft: 20
   },
   productTitle: {
     flex: 1,
-    fontSize: 25,
+    fontSize: 14,
     //fontWeight: 'bold',
     fontFamily: 'RobotoBold',
     marginBottom: 5
   },
   productPrize: {
     flex: 1,
-    fontSize: 25,
-    fontWeight: 'bold',
+    fontSize: 18,
     fontFamily: 'RobotoBold',
     marginBottom: 5
   },
   availabilityMessage: {
     flex: 1,
-    fontSize: 25,
+    fontSize: 14,
     fontFamily: 'RobotoBold',
     marginBottom: 5
   },
@@ -182,39 +184,47 @@ var styles = StyleSheet.create({
   subTitle: {
     //color: '#333333',
     //fontFamily: 'Roboto',
-    marginBottom:10,
-    fontSize: 22,
+    marginBottom:5,
+    fontSize: 12,
   },
   specialPrice: {
     color: '#333333',
     fontFamily: 'Roboto',
-    marginBottom:5,
-    marginLeft:20,
-    fontSize:30,
+    marginLeft:10,
+    fontSize:18,
     textDecorationLine: 'line-through'
 
   },
+  tags:{
+    flex:1,
+    padding:5,
+    marginRight:5,
+    borderColor: '#E4E4E4',
+    borderWidth: 1
+  },
+
   totalDiscount: {
     fontFamily: 'Roboto',
-    marginBottom:5,
+    
     marginLeft:20,
-    fontSize:25,
+    fontSize:14,
     color:'green'
   },
   row: {
     backgroundColor: 'white',
     flexDirection: 'row',
     alignItems:'flex-start',
-    padding: 20,
-    height: 250
+    padding: 14,
+    height: 130
 
   },
   cellImage: {
     backgroundColor: 'transparent',
-    height: 200,
-    marginRight: 30,
-    marginLeft: 20,
-    width: 100,
+    height: 80,
+    marginRight: 10,
+    marginTop: 10,
+    marginLeft: 10,
+    width: 50,
   },
   cellBorder: {
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
