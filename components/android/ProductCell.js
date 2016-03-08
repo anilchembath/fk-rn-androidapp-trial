@@ -29,46 +29,46 @@ var {
 
 var ProductCell = React.createClass({
   getTextFromScore: function(score: number): string {
-    return score > 0 ? score + '%' : 'N/A';
+	return score > 0 ? score + '%' : 'N/A';
   },
   getImageSource: function(product: Object): {uri: ?string} {
-    var uri = product && product.media && product.media.images ? product.media.images[0].url : null;
-    if (uri) {
-        uri = uri.replace("{@width}", "200");
-        uri = uri.replace("{@height}", "200");
-        uri = uri.replace("{@quality}", "80");
-    }
-    return { uri };
+	var uri = product && product.media && product.media.images ? product.media.images[0].url : null;
+	if (uri) {
+		uri = uri.replace("{@width}", "200");
+		uri = uri.replace("{@height}", "200");
+		uri = uri.replace("{@quality}", "80");
+	}
+	return { uri };
   },
   getSellingPrice: function(product){
-    if(product && product.pricing){
-      let prices= product.pricing.prices;
-        for (var price in prices) {
-         if(price.name === "Selling Price"){
-            return price.value;
-         }
-       }
-    }
-       return "";
+	if(product && product.pricing){
+	  let prices= product.pricing.prices;
+		for (var price in prices) {
+		 if(price.name === "Selling Price"){
+			return price.value;
+		 }
+	   }
+	}
+	   return "";
   },
 
   getFinalDiscount: function(product){
-     return product && product.pricing ? product.pricing.totalDiscount : 0;
+	 return product && product.pricing ? product.pricing.totalDiscount : 0;
   },
   getFinalPrice: function(product){
-     return product && product.pricing ? product.pricing.finalPrice.value : "";
+	 return product && product.pricing ? product.pricing.finalPrice.value : "";
   },
   showAvailability: function(product){
-     return product.availability &&  product.availability.showMessage  ? product.availability.showMessage : "";
+	 return product.availability &&  product.availability.showMessage  ? product.availability.showMessage : "";
   },
   isProductAvailable: function(product){
-     return product.availability &&  product.availability.intent === "negative"  ? false : true;
+	 return product.availability &&  product.availability.intent === "negative"  ? false : true;
   },
   getAvailabilityMessage: function(product){
-     return product.availability &&  product.availability.message  ? product.availability.message : "";
+	 return product.availability &&  product.availability.message  ? product.availability.message : "";
   },
   getAvailabilityIntent: function(product){
-     return product.availability &&  product.availability.intent  ? product.availability.intent : "";
+	 return product.availability &&  product.availability.intent  ? product.availability.intent : "";
   },
 
   render: function() {
@@ -78,161 +78,181 @@ var ProductCell = React.createClass({
    let finalPrice = this.getFinalPrice(product);
    let dicount = this.getFinalDiscount(product);
    let isProductAvailable = this.isProductAvailable(product);
-    var TouchableElement = TouchableHighlight;
-    if (Platform.OS === 'android') {
-      TouchableElement = TouchableNativeFeedback;
-    }
-    return (
-      <View>
-        <TouchableElement
-          onShowUnderlay={this.props.onHighlight}
-          onHideUnderlay={this.props.onUnhighlight}>
-          <View style={styles.row}>
-            <Image
-              source={this.getImageSource(product)}
-              style={styles.cellImage}
-              resizeMode={Image.resizeMode.contain}
-            />
-            <View style={styles.textContainer}>
-              <View >
-                <Text style={styles.productTitle} numberOfLines={2}>
-                  {product.titles.title}
-                </Text>
-              </View>
-              {product.titles.subtitle  ?
-                  <View>
-                      <Text style={styles.subTitle}   numberOfLines={1}>
-                        {product.titles.subtitle}
-                      </Text>
-                  </View>
-                 : null
-              }
-              {isProductAvailable ? 
-                  <View style={{flex:1,flexDirection:'column'}}>
-                    <View style={{flex:1,flexDirection:'row'}}>
-                    
-                        <Text style={styles.productPrize}   numberOfLines={1}>
-                          {finalPrice}
-                        </Text>
-                         {dicount>0 ?
-                            <Text style={styles.totalDiscount}   numberOfLines={1}>
-                                {dicount} %
-                            </Text>
-                           : null
-                         }
-                      </View>
-                      {product.tags ? 
-                       <View style={{flex:1,flexDirection:'row'}}>
-                        {product.tags.map(tag =>
-                            <View key={tag} style={styles.tags}>
-                                <Text>{tag} </Text>
-                            </View>
-                          )}
-                       </View>
-                       : null
-                      }
-                  </View>
-                : <View View style={{flex:1,flexDirection:'row'}}>
-                      {this.showAvailability(product) ? 
-                        <View style={{flex:1,flexDirection:'row'}}>
-                          <Text style={[styles.availabilityMessage,styles[product.availability.intent]]}   numberOfLines={1}>
-                            {this.getAvailabilityMessage(product)}
-                          </Text>
-                        </View>  
-                    : null }
-                   </View> 
-                }                
-            </View>
-          </View>
-        </TouchableElement>
-      </View>
-    );
+   	var TouchableElement = TouchableHighlight;
+	if (Platform.OS === 'android') {
+	  TouchableElement = TouchableNativeFeedback;
+	}
+	return (
+	  <View>
+		<TouchableElement
+		  onShowUnderlay={this.props.onHighlight}
+		  onHideUnderlay={this.props.onUnhighlight}>
+		  <View style={styles.row}>
+			<Image
+			  source={this.getImageSource(product)}
+			  style={styles.cellImage}
+			  resizeMode={Image.resizeMode.contain}
+			/>
+			<View style={styles.textContainer}>
+			  <View >
+				<Text style={styles.productTitle} numberOfLines={1}>
+				  {product.titles.title}
+				</Text>
+			  </View>
+			  {product.titles.subtitle  ?
+				  <View>
+					  <Text numberOfLines={1}  style={styles.subTitle}>
+						{product.titles.subtitle}
+					  </Text>
+				  </View>
+				 : null
+			  }
+			  {isProductAvailable ? 
+				  <View style={{flex:1,flexDirection:'column'}}>
+					<View style={{flex:1,flexDirection:'row'}}>
+					
+						<Text style={styles.productPrize}   numberOfLines={1}>
+						  {finalPrice}
+						</Text>
+						 {dicount>0 ?
+							<Text style={styles.totalDiscount}   numberOfLines={1}>
+								{dicount} %
+							</Text>
+						   : null
+						 }
+					  </View>
+					  {product.rating ? 
+						<View style={{height:20,overflow:'hidden',width:120,marginBottom:10, }}>
+							<View style={styles.ratingContainer}><Text  style={styles.rating}>&#9733;&#9733;&#9733;&#9733;&#9733;</Text></View>
+							<View style={styles.ratingContainer, {width:product.rating.average*16}} ><Text style={styles.ratingSelected}>&#9733;&#9733;&#9733;&#9733;&#9733;</Text></View>
+						</View>
+						: null }
+					  {product.tags ? 
+					   <View style={{flex:1,flexDirection:'row'}}>
+						{product.tags.map(tag =>
+							<View key={tag} style={styles.tags}>
+								<Text>{tag} </Text>
+							</View>
+						  )}
+					   </View>
+					   : null
+					  }
+					
+					   
+				  </View>
+				: <View View style={{flex:1,flexDirection:'row'}}>
+					  {this.showAvailability(product) ? 
+						<View style={{flex:1,flexDirection:'row'}}>
+						  <Text style={[styles.availabilityMessage,styles[product.availability.intent]]}   numberOfLines={1}>
+							{this.getAvailabilityMessage(product)}
+						  </Text>
+						</View>  
+					: null }
+				   </View> 
+				}                
+			</View>
+		  </View>
+		</TouchableElement>
+	  </View>
+	);
   }
 });
 
 var styles = StyleSheet.create({
   textContainer: {
-    flex: 1,
-    alignItems:'flex-start',
-    paddingLeft: 20
+	flex: 1,
+	alignItems:'flex-start',
+	paddingLeft: 20
+  },
+  row: {
+	backgroundColor: 'white',
+	flexDirection: 'row',
+	alignItems:'flex-start',
+	padding: 14,
+	height: 155
+
   },
   productTitle: {
-    flex: 1,
-    fontSize: 14,
-    //fontWeight: 'bold',
-    fontFamily: 'RobotoBold',
-    marginBottom: 5
+	flex: 1,
+	fontSize: 14,
+	//fontWeight: 'bold',
+	fontFamily: 'RobotoBold',
+	marginBottom: 5
   },
   productPrize: {
-    flex: 1,
-    fontSize: 18,
-    fontFamily: 'RobotoBold',
-    marginBottom: 5
+	flex: 1,
+	fontSize: 18,
+	fontFamily: 'RobotoBold',
   },
   availabilityMessage: {
-    flex: 1,
-    fontSize: 14,
-    fontFamily: 'RobotoBold',
-    marginBottom: 5
+	flex: 1,
+	fontSize: 14,
+	fontFamily: 'RobotoBold',
+	marginBottom: 5
   },
   negative: {
-    color:'red'
+	color:'red'
   },
   positive: {
-    color:'green'
+	color:'green'
   },
   subTitle: {
-    //color: '#333333',
-    //fontFamily: 'Roboto',
-    marginBottom:5,
-    fontSize: 12,
+	//color: '#333333',
+	//fontFamily: 'Roboto',
+	marginBottom:5,
+	fontSize: 12,
   },
   specialPrice: {
-    color: '#333333',
-    fontFamily: 'Roboto',
-    marginLeft:10,
-    fontSize:18,
-    textDecorationLine: 'line-through'
+	color: '#333333',
+	fontFamily: 'Roboto',
+	marginLeft:10,
+	fontSize:18,
+	textDecorationLine: 'line-through'
 
   },
   tags:{
-    flex:1,
-    padding:5,
-    marginRight:5,
-    borderColor: '#E4E4E4',
-    borderWidth: 1
+	flex:1,
+	padding:5,
+	marginRight:5,
+	borderColor: '#E4E4E4',
+	borderWidth: 1
   },
-
+  ratingContainer: {
+	left:0,
+	position:'absolute',
+	height:20,
+	overflow:'hidden',
+  },
+  rating: {
+	color:'#eeeeee',
+	fontSize:18
+  },
+  ratingSelected:{
+	fontSize:18,
+	color:'#FEDA00'
+  },
   totalDiscount: {
-    fontFamily: 'Roboto',
-    
-    marginLeft:20,
-    fontSize:14,
-    color:'green'
-  },
-  row: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems:'flex-start',
-    padding: 14,
-    height: 130
-
+	fontFamily: 'Roboto',
+	
+	marginLeft:20,
+	fontSize:14,
+	color:'green'
   },
   cellImage: {
-    backgroundColor: 'transparent',
-    height: 80,
-    marginRight: 10,
-    marginTop: 10,
-    marginLeft: 10,
-    width: 50,
+	backgroundColor: 'transparent',
+	height: 80,
+	marginRight: 10,
+	marginTop: 10,
+	marginLeft: 10,
+	width: 50,
   },
   cellBorder: {
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    height: StyleSheet.hairlineWidth,
-    marginLeft: 4,
+	backgroundColor: 'rgba(0, 0, 0, 0.1)',
+	height: StyleSheet.hairlineWidth,
+	marginLeft: 4,
   },
   noScore: {
-    color: '#999999',
+	color: '#999999',
   }
 });
 
