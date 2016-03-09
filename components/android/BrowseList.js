@@ -53,7 +53,10 @@ export default class BrowseList extends ReactComponentWithStore{
 		isLoading: true,
 		isLoadingTail: false,
 		dataSource: new ListView.DataSource({
-		  rowHasChanged: (row1, row2) => row1 !== row2,
+		  rowHasChanged: (row1, row2) => {
+		  	console.log("rowData  ",row1, row2, row1 !== row2)
+		  	return row1 !== row2
+		  },
 		  getRowData: (dataBlob, sectionID, rowID) => {
 			  return dataBlob[sectionID][rowID];
 		  }
@@ -86,6 +89,7 @@ export default class BrowseList extends ReactComponentWithStore{
 		  let productList = newState.data.productList;
 		  let productKeys = Object.keys(productList); 
 		  let productCount = productKeys.length;
+		  console.log(productList);
 		  if(productCount> 0){
 			  let startIndex = this.state.startIndex + productCount;
 			  var products = this.state.startIndex !== 0 ? this.state.products : [] ; // handling reset scenario
@@ -177,7 +181,7 @@ export default class BrowseList extends ReactComponentWithStore{
 			<ProgressBarAndroid styleAttr="Large"/>
 		</View>
 	 } else {
-	   content = <ListView
+	 	content = <ListView
 		  ref="listview"
 		  renderSeparator={this.renderSeparator.bind(this)}
 		  dataSource={this.getDataSource(this.state.products)}

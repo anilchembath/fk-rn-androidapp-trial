@@ -122,9 +122,14 @@ var ProductCell = React.createClass({
 						 }
 					  </View>
 					  {product.rating ? 
-						<View style={{height:20,overflow:'hidden',width:120,marginBottom:10, }}>
-							<View style={styles.ratingContainer}><Text  style={styles.rating}>&#9733;&#9733;&#9733;&#9733;&#9733;</Text></View>
-							<View style={styles.ratingContainer, {width:product.rating.average*16}} ><Text style={styles.ratingSelected}>&#9733;&#9733;&#9733;&#9733;&#9733;</Text></View>
+					  	<View style={{flex:1, flexDirection:'row'}}> 
+							<View style={{height:20,overflow:'hidden',width:100,marginBottom:10, }}>
+								<View style={styles.ratingContainer}><Text  style={styles.rating}>&#9733;&#9733;&#9733;&#9733;&#9733;</Text></View>
+								<View style={styles.ratingContainer, {width:product.rating.average*16}} ><Text style={styles.ratingSelected}>&#9733;&#9733;&#9733;&#9733;&#9733;</Text></View>
+							</View>
+							<View style={{paddingTop:5}}>
+								<Text style={styles.ratingText}>{product.rating.count} Ratings</Text>
+							</View>
 						</View>
 						: null }
 					  {product.tags ? 
@@ -226,6 +231,9 @@ var styles = StyleSheet.create({
   rating: {
 	color:'#eeeeee',
 	fontSize:18
+  },
+  ratingText: {
+  	fontSize: 12 
   },
   ratingSelected:{
 	fontSize:18,

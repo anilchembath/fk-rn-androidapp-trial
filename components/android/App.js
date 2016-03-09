@@ -20,7 +20,7 @@ import ListPage from './BrowseList';
 var ToastAndroid = require('../../nativemodules/ToastModule');
 import ReactComponentWithStore from 'react-native-shared/components/common/ReactComponentWithStore.js';
 
-ToastAndroid.show('Awesome', ToastAndroid.SHORT);
+//ToastAndroid.show('Awesome', ToastAndroid.SHORT);
 
 export default class App extends ReactComponentWithStore{
   constructor(args){

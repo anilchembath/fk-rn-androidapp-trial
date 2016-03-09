@@ -45,7 +45,7 @@ export default class SortOptions extends ReactComponentWithStore{
 						selectedValue={this.state.sortby}
 						onValueChange={this.sortOptionChange.bind(this)} style={styles.picker}>
 							 {this.props.sortOptions.map(sortOption =>
-								<Picker.Item key= {sortOption.title} label={sortOption.title} value={sortOption.resource.params} />
+								<Picker.Item key= {sortOption.title} label={sortOption.title} style= {styles.pickerItem} value={sortOption.resource.params} />
 							 )}  
 					</Picker>
 				</View>
@@ -59,13 +59,16 @@ var styles = StyleSheet.create({
 		alignItems: 'center',
 		width: 200,
 		marginLeft:10,
-		marginRight:10
+		marginRight:20
 	},
 	sortBy:{
 		flexDirection: 'row',
 		flex:0.5,
 		width:300
 	},
+	pickerItem:{
+		color:'red'
+	}
 });
 SortOptions.propTypes = {
 		sortOptions: React.PropTypes.array,
