@@ -32,13 +32,36 @@ export default class SortOptions extends ReactComponentWithStore{
 	constructor(args){
 			super(args);
 			this.state = {
-				sortby:'popularity'
+				sortby:'sort=relevance'
 			}
 	}
 	sortOptionChange(value){
-		this.setState({sortby: value});
-		this.props.onSortOptionChange(value);
+		// console.log("sortchange " +this.state.sortby + "   " +  value  );
+		if(this.state.sortby != value){
+			this.setState({sortby: value});
+				this.props.onSortOptionChange(value);
+		}
 	}
+	// componentWillReceiveProps (props) {
+	// 	let sortOptions = props.sortOptions;
+	// 	if(sortOptions && sortOptions.length > 0){
+	// 		let selectedOption = "";
+	// 		sortOptions.map(sortOption => {
+	// 				if(sortOption.resource.selected === true) {
+	// 					selectedOption =  sortOption.resource.params
+	// 				}
+	// 			}
+	// 		)
+	// 		if(!selectedOption){
+	// 			selectedOption = sortOptions[0].resource.params;
+	// 		}
+	// 		if(this.state.sortby != selectedOption){
+	// 			this.setState({
+	// 				sortby: selectedOption
+	// 			});
+	// 		}
+	// 	}
+	// }
 	render() {
 		return (
 			 <View style={styles.sortBy}>

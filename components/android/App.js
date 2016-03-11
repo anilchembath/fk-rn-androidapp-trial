@@ -17,6 +17,7 @@ var {
 } = React;
 //import { connect } from 'react-redux';
 import ListPage from './BrowseList';
+import Filter from './Filters/Filters';
 var ToastAndroid = require('../../nativemodules/ToastModule');
 import ReactComponentWithStore from 'react-native-shared/components/common/ReactComponentWithStore.js';
 

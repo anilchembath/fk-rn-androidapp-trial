@@ -28,19 +28,9 @@ var {
   Picker
 } = React;
 import {Actions, ActionCreator} from '../../actions';
-var invariant = require('invariant');
-var dismissKeyboard = require('dismissKeyboard');
 
 var ProductCell = require('./ProductCell');
 var SortOptions = require('./SortOptions');
-var ServiceResponse = require('./ServiceResponse');
-var DataSource = require('./DataSource');
-
-var API_URL = 'http://api.rottentomatoes.com/api/public/v1.0/';
-var API_KEYS = [
-  '7waqfqbprs7pajbz28mqf6vz',
-  // 'y4vwv8m33hed9ety83jmv52f', Fallback api_key
-];
 
 
 import ReactComponentWithStore from 'react-native-shared/components/common/ReactComponentWithStore.js';
@@ -193,7 +183,7 @@ export default class BrowseList extends ReactComponentWithStore{
 		  renderSeparator={this.renderSeparator.bind(this)}
 		  dataSource={this.getDataSource(this.state.products)}
 		  renderRow={this.renderRow.bind(this)}
-		  xrenderFooter= {this.renderFooter.bind(this)}
+		  renderFooter= {this.renderFooter.bind(this)}
 		  onEndReached={this.onEndReached.bind(this)}
 		  automaticallyAdjustContentInsets={false}
 		  keyboardDismissMode="on-drag"
