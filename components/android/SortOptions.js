@@ -22,6 +22,7 @@ var {
 	TouchableHighlight,
 	TouchableNativeFeedback,
 	View,
+	Text,
 	Picker
 } = React;
 import ReactComponentWithStore from 'react-native-shared/components/common/ReactComponentWithStore.js';
@@ -41,6 +42,7 @@ export default class SortOptions extends ReactComponentWithStore{
 	render() {
 		return (
 			 <View style={styles.sortBy}>
+			 	{this.props.sortOptions.length >0 ?
 					<Picker
 						selectedValue={this.state.sortby}
 						onValueChange={this.sortOptionChange.bind(this)} style={styles.picker}>
@@ -48,7 +50,12 @@ export default class SortOptions extends ReactComponentWithStore{
 								<Picker.Item key= {sortOption.title} label={sortOption.title} style= {styles.pickerItem} value={sortOption.resource.params} />
 							 )}  
 					</Picker>
-				</View>
+				 : 
+				  <View style={styles.sortByTitle}>
+					<Text style={styles.titleText}>Sort By</Text>
+		 		 	</View>
+		 		}
+			</View>
 		 
 		);
 	}
@@ -68,6 +75,14 @@ var styles = StyleSheet.create({
 	},
 	pickerItem:{
 		color:'red'
+	},
+	sortByTitle:{
+		marginLeft:10,
+		padding: 10
+	},
+	titleText:{
+		fontSize:18,
+		color:'#565656'
 	}
 });
 SortOptions.propTypes = {

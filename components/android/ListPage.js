@@ -187,10 +187,12 @@ var ListPage = React.createClass({
         renderSeparator={this.renderSeparator}
         dataSource={this.state.dataSource}
         renderRow={this.renderRow}
+        initialListSize={1}
+        pageSize={2}
         onEndReached={this.onEndReached}
-        automaticallyAdjustContentInsets={false}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps={true}
+        removeClippedSubviews={true}
         showsVerticalScrollIndicator={false} />;
 
     return (

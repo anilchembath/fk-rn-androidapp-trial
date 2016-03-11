@@ -67,8 +67,8 @@ export default class BrowseList extends ReactComponentWithStore{
 		products : [],
 		hasMoreRecords: true,
 		sortby:'popularity',
-		sortOptions:''
-
+		sortOptions:'',
+		sorting: false
 	  }
   }
   componentWillMount(){
@@ -81,7 +81,7 @@ export default class BrowseList extends ReactComponentWithStore{
 	actionCreator.getProducts(this.state.startIndex,this.state.product_count, this.state.sortOptions );
   }
   getSortOptions(search){
-	return search && search.sortOptions ? search.sortOptions : []
+  	return search && search.sortOptions ? search.sortOptions : []
   }
   subscribeToStore(store){
 	  store.subscribe(()=>{
@@ -100,12 +100,27 @@ export default class BrowseList extends ReactComponentWithStore{
 				products: products,
 				search:newState.data.search,
 				isLoading: false,
+				sorting: false,
 				startIndex: startIndex,
+				isLoadingTail:false,
 				hasMoreRecords: productCount == this.state.product_count
 			  });
 			  //console.log("products" + products, "hasMoreRecords  ", productCount == this.state.product_count)
 		  }
 	  });
+  }
+  onSortOptionChange(value){
+	 this.setState({
+		startIndex:0,
+		sortOptions:'&' + value,
+		products: [],
+		sorting: true,
+		isLoading: true,
+	   },()=> {
+		  let actionCreator = this.getActionCreator();
+		  actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions);
+		}
+	 );
   }
   getDummyProducts(){
 	return ServiceResponse.default.RESPONSE.product;
@@ -114,6 +129,9 @@ export default class BrowseList extends ReactComponentWithStore{
   onEndReached() {
   	if(this.state.hasMoreRecords){
 	   let actionCreator = this.getActionCreator()
+	   this.setState({
+	   	isLoadingTail: true
+	   })
 		actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions);
 	}
   }
@@ -123,12 +141,12 @@ export default class BrowseList extends ReactComponentWithStore{
   }
 
   renderFooter() {
-	if (!this.hasMore() || !this.state.isLoadingTail) {
+	if (!this.state.hasMoreRecords || !this.state.isLoadingTail) {
 	  return <View style={styles.scrollSpinner} />;
 	}
 	  return (
 		<View  style={{alignItems: 'center'}}>
-		  <ProgressBarAndroid styleAttr="Large"/>
+		  <ProgressBarAndroid styleAttr="Small"/>
 		</View>
 	  );
   }
@@ -162,23 +180,12 @@ export default class BrowseList extends ReactComponentWithStore{
 		product={productData} />
 	);
   }
-  onSortOptionChange(value){
-	 this.setState({
-		startIndex:0,
-		sortOptions:'&' + value
-	   },()=> {
-		  let actionCreator = this.getActionCreator();
-		  actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions);
-		}
-	 );
-  }
   render() {
 
 	 var content = "";
-
 	 if(this.state.isLoading && this.state.products.length === 0){
 		content =  <View  style={[styles.container, styles.loader]}>
-			<ProgressBarAndroid styleAttr="Large"/>
+			<ProgressBarAndroid styleAttr="Normal"/>
 		</View>
 	 } else {
 	 	content = <ListView
@@ -186,6 +193,7 @@ export default class BrowseList extends ReactComponentWithStore{
 		  renderSeparator={this.renderSeparator.bind(this)}
 		  dataSource={this.getDataSource(this.state.products)}
 		  renderRow={this.renderRow.bind(this)}
+		  xrenderFooter= {this.renderFooter.bind(this)}
 		  onEndReached={this.onEndReached.bind(this)}
 		  automaticallyAdjustContentInsets={false}
 		  keyboardDismissMode="on-drag"
@@ -195,7 +203,11 @@ export default class BrowseList extends ReactComponentWithStore{
 
 	return (
 	  <View style={styles.container}>
-		<View style={styles.filterBar}>
+	  	{/* this.state.sorting ? 
+	  			<ProgressBarAndroid styleAttr="Horizontal"/>
+	  		: null
+	  	*/}
+	  	<View style={styles.filterBar}>
 		  <View style={styles.filter}>
 			<Text style={styles.filterText}>Filter</Text>
 		  </View>

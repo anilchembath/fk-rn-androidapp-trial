@@ -181,6 +181,7 @@ var styles = StyleSheet.create({
 	flex: 1,
 	fontSize: 14,
 	//fontWeight: 'bold',
+	overflow:'hidden',
 	fontFamily: 'RobotoBold',
 	marginBottom: 5
   },
