@@ -17,20 +17,19 @@
 
 var React = require('react-native');
 var {
-  ActivityIndicatorIOS,
   ListView,
-  Platform,
   ProgressBarAndroid,
   StyleSheet,
   Text,
   View,
   Image,
-  Picker
+  TouchableNativeFeedback
 } = React;
 import {Actions, ActionCreator} from '../../actions';
 
 var ProductCell = require('./ProductCell');
 var SortOptions = require('./SortOptions');
+var FilterOption = require('./FilterOption');
 
 
 import ReactComponentWithStore from 'react-native-shared/components/common/ReactComponentWithStore.js';
@@ -44,7 +43,6 @@ export default class BrowseList extends ReactComponentWithStore{
 		isLoadingTail: false,
 		dataSource: new ListView.DataSource({
 		  rowHasChanged: (row1, row2) => {
-		  	console.log("rowData  ",row1, row2, row1 !== row2)
 		  	return row1 !== row2
 		  },
 		  getRowData: (dataBlob, sectionID, rowID) => {
@@ -56,48 +54,70 @@ export default class BrowseList extends ReactComponentWithStore{
 		product_count: 10,
 		products : [],
 		hasMoreRecords: true,
-		sortby:'popularity',
 		sortOptions:'',
-		sorting: false
-	  }
+		facetsList: [],
+		appliedFilters: {}
+	}
   }
   componentWillMount(){
 	this._bindActionCreator(ActionCreator);
-	this.subscribeToStore(this._getStore());
+	this._getStore().subscribe(this.changeHandler.bind(this));
+  }
+
+  componentWillUnMount(){
+	this._getStore().unsubscribe(this.changeHandler.bind(this));
   }
 
   async componentDidMount() {
-	let actionCreator = this.getActionCreator()
-	actionCreator.getProducts(this.state.startIndex,this.state.product_count, this.state.sortOptions );
+	let actionCreator = this.getActionCreator();
+	// var appliedFilters = {
+ //  // 	 	"Resolution Type" :  { 
+	// 	// 		'DVGA': "filter=facets.resolution_type%255B%255D%3DDVGA",
+	// 	// 		'Full HD': "filter=facets.resolution_type%255B%255D%3DFull%2BHD"
+	// 	// }, 
+	// 	"Brand":{
+	// 		'Acer': "filter=facets.brand%255B%255D%3DAcer"
+	// 	}
+ //  	 };
+  	 let browseState = this._getStore().getState();
+  	 let appliedFilters = browseState.appliedFilters;
+  	 actionCreator.getProducts(this.state.startIndex,this.state.product_count, this.state.sortOptions ,appliedFilters);
   }
+
   getSortOptions(search){
   	return search && search.sortOptions ? search.sortOptions : []
   }
-  subscribeToStore(store){
-	  store.subscribe(()=>{
-		  let newState = store.getState();
-		  let productList = newState.data.productList;
-		  let productKeys = Object.keys(productList); 
-		  let productCount = productKeys.length;
-		  console.log(productList);
-		  if(productCount> 0){
-			  let startIndex = this.state.startIndex + productCount;
-			  var products = this.state.startIndex !== 0 ? this.state.products : [] ; // handling reset scenario
-			  for(let porductId in productList){
-				products[porductId]  = productList[porductId];
-			  }
-			  this.setState({
-				products: products,
-				search:newState.data.search,
-				isLoading: false,
-				sorting: false,
-				startIndex: startIndex,
-				isLoadingTail:false,
-				hasMoreRecords: productCount == this.state.product_count
-			  });
-			  //console.log("products" + products, "hasMoreRecords  ", productCount == this.state.product_count)
+
+  changeHandler(){
+  	  let store = this._getStore();
+ 	  let newState = store.getState();
+ 	  let productList = newState.data.productList;
+ 	  let productKeys = Object.keys(productList); 
+	  let productCount = productKeys.length;
+	  if(productCount> 0){
+	  	  let startIndex = this.state.startIndex + productCount;
+		  var products = this.state.startIndex !== 0 ? this.state.products : [] ; // handling reset scenario
+		  for(let porductId in productList){
+			products[porductId]  = productList[porductId];
 		  }
-	  });
+		  let updatedState = {
+			products: products,
+			search:newState.data.search,
+			isLoading: false,
+			startIndex: startIndex,
+			isLoadingTail:false,
+			hasMoreRecords: productCount == this.state.product_count
+		  };
+		  let facetsList = newState.data.search.facetResponseList;
+		  if(facetsList.length > 0) { // facets will come only in the first request
+		  		updatedState["facetsList"] =  facetsList 
+		  }
+		  this.setState(updatedState);
+	  }else {
+	  		this.setState({
+	  			isLoading: false
+	  		});	
+	  }
   }
   onSortOptionChange(value){
 	 this.setState({
@@ -170,13 +190,22 @@ export default class BrowseList extends ReactComponentWithStore{
 		product={productData} />
 	);
   }
+  selectFilter(){
+  	this.props.navigator.push({
+	    title: "Filter",
+	    name: 'filter',
+	    facets: this.state.facetsList
+	  });
+  }
   render() {
-
 	 var content = "";
-	 if(this.state.isLoading && this.state.products.length === 0){
+	 let productList = this.state.products; 
+	 if(this.state.isLoading){
 		content =  <View  style={[styles.container, styles.loader]}>
 			<ProgressBarAndroid styleAttr="Normal"/>
 		</View>
+	 } else if(Object.keys(productList).length === 0){
+	 	 content =  <NoProducts/>
 	 } else {
 	 	content = <ListView
 		  ref="listview"
@@ -198,11 +227,9 @@ export default class BrowseList extends ReactComponentWithStore{
 	  		: null
 	  	*/}
 	  	<View style={styles.filterBar}>
-		  <View style={styles.filter}>
-			<Text style={styles.filterText}>Filter</Text>
-		  </View>
-		 <SortOptions sortOptions = {this.getSortOptions(this.state.search)} 
-			onSortOptionChange={this.onSortOptionChange.bind(this)}/>
+	  		<FilterOption onClick={this.selectFilter.bind(this)} appliedFilters = {this.state.appliedFilters}/>
+		 	<SortOptions sortOptions = {this.getSortOptions(this.state.search)} 
+				onSortOptionChange={this.onSortOptionChange.bind(this)}/>
 		</View>
 		{content}
 	  </View>
@@ -212,18 +239,9 @@ export default class BrowseList extends ReactComponentWithStore{
 
 var NoProducts = React.createClass({
   render: function() {
-	var text = '';
-	if (this.props.filter) {
-	  text = `No results for "${this.props.filter}"`;
-	} else if (!this.props.isLoading) {
-	  // If we're looking at the latest movies, aren't currently loading, and
-	  // still have no results, show a message
-	  text = 'No products found';
-	}
-
 	return (
 	  <View style={[styles.container, styles.centerText]}>
-		<Text style={styles.noProducts}>{text}</Text>
+		<Text style={styles.noProducts}>No products found</Text>
 	  </View>
 	);
   }

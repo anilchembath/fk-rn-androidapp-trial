@@ -34,14 +34,26 @@ export default class BrowseList extends ReactComponentWithStore{
   }
   componentWillMount(){
 	this._bindActionCreator(ActionCreator);
-	this.subscribeToStore(this._getStore());
+	// this.subscribeToStore(this._getStore());
   }
 
-  async componentDidMount() {
+ //  async componentDidMount() {
+	// let actionCreator = this.getActionCreator()
+	// actionCreator.getProducts(0,1,"");
+ //  }
+
+  componentDidMount() {
 	let actionCreator = this.getActionCreator()
-	actionCreator.getProducts(0,1,"");
+	if(this.props.facets){
+		let facets = this.props.facets;
+		let visibleFacets = facets.slice(0,7);
+		this.setState({
+			facets: visibleFacets,
+			selectedFacet: visibleFacets[0],
+			isLoading: false
+		});
+	} 
   }
-
 
   subscribeToStore(store){
 	  store.subscribe(()=>{
@@ -65,8 +77,10 @@ export default class BrowseList extends ReactComponentWithStore{
 
   }
   applyFilter(){
-  	console.log(this.state.appliedFilters);
+  	this.getActionCreator().updateAppliedFilters(this.state.appliedFilters);
+  	this.props.navigator.pop();
   }
+
   filterItemChange(facet,parentFacet){
   	var appliedFilters = this.state.appliedFilters;
   	if(!appliedFilters[parentFacet.title]){
@@ -96,6 +110,9 @@ export default class BrowseList extends ReactComponentWithStore{
   		if(!this.state.isLoading  && this.state.facets.length > 0){
   			let selectedFacet = this.state.selectedFacet;
 			 return (<View style={styles.container}>
+			 			<View style={styles.headerStrip}>
+			 				<Text style={{fontSize:22, color:'#353535'}}> Filter</Text>
+			 			</View>
 			 			<View style={styles.filterContainer}>
 						  	<View style={styles.leftContainer}>
 							  	 {this.state.facets.map(facet =>
@@ -165,6 +182,11 @@ var styles = StyleSheet.create({
   leftContainer:{
   	flex:0.4,
   	backgroundColor:'#454545'
+  },
+  headerStrip:{
+  	borderColor: '#E4E4E4',
+	borderBottomWidth: 1,
+	padding:10
   },
   loader: {
 	alignItems: 'center',
