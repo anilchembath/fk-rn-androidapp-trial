@@ -26,6 +26,7 @@ var {
   TouchableNativeFeedback
 } = React;
 import {Actions, ActionCreator} from '../../actions';
+import isequal from 'lodash.isequal';
 
 var ProductCell = require('./ProductCell');
 var SortOptions = require('./SortOptions');
@@ -51,13 +52,14 @@ export default class BrowseList extends ReactComponentWithStore{
 
 		}),
 		startIndex: 0,
-		product_count: 10,
+		product_count: 15,
 		products : [],
 		hasMoreRecords: true,
 		sortOptions:'',
 		facetsList: [],
-		appliedFilters: {}
-	}
+		appliedFilters:{}
+	};
+	//this.appliedFilters = {};
   }
   componentWillMount(){
 	this._bindActionCreator(ActionCreator);
@@ -70,18 +72,8 @@ export default class BrowseList extends ReactComponentWithStore{
 
   async componentDidMount() {
 	let actionCreator = this.getActionCreator();
-	// var appliedFilters = {
- //  // 	 	"Resolution Type" :  { 
-	// 	// 		'DVGA': "filter=facets.resolution_type%255B%255D%3DDVGA",
-	// 	// 		'Full HD': "filter=facets.resolution_type%255B%255D%3DFull%2BHD"
-	// 	// }, 
-	// 	"Brand":{
-	// 		'Acer': "filter=facets.brand%255B%255D%3DAcer"
-	// 	}
- //  	 };
-  	 let browseState = this._getStore().getState();
-  	 let appliedFilters = browseState.appliedFilters;
-  	 actionCreator.getProducts(this.state.startIndex,this.state.product_count, this.state.sortOptions ,appliedFilters);
+	 let browseState = this._getStore().getState();
+  	 actionCreator.getProducts(this.state.startIndex,this.state.product_count, this.state.sortOptions ,browseState.appliedFilters);
   }
 
   getSortOptions(search){
@@ -94,10 +86,24 @@ export default class BrowseList extends ReactComponentWithStore{
  	  let productList = newState.data.productList;
  	  let productKeys = Object.keys(productList); 
 	  let productCount = productKeys.length;
+	  let appliedFilters = newState.data.appliedFilters;
+	  	if(!isequal(appliedFilters ,this.state.appliedFilters)){
+			this.setState({
+					appliedFilters: appliedFilters, 
+					startIndex:0,
+					products: [],
+					isLoading: true
+				},()=> {
+					let actionCreator = this.getActionCreator();
+					actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions,appliedFilters);
+				}
+			);
+			return;
+		}	
 	  if(productCount> 0){
 	  	  let startIndex = this.state.startIndex + productCount;
 		  var products = this.state.startIndex !== 0 ? this.state.products : [] ; // handling reset scenario
-		  for(let porductId in productList){
+		   for(let porductId in productList){
 			products[porductId]  = productList[porductId];
 		  }
 		  let updatedState = {
@@ -128,7 +134,7 @@ export default class BrowseList extends ReactComponentWithStore{
 		isLoading: true,
 	   },()=> {
 		  let actionCreator = this.getActionCreator();
-		  actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions);
+		  actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions,this.state.appliedFilters);
 		}
 	 );
   }
@@ -142,7 +148,7 @@ export default class BrowseList extends ReactComponentWithStore{
 	   this.setState({
 	   	isLoadingTail: true
 	   })
-		actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions);
+		actionCreator.getProducts(this.state.startIndex,this.state.product_count,this.state.sortOptions,this.state.appliedFilters);
 	}
   }
 

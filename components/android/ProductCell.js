@@ -87,7 +87,7 @@ var ProductCell = React.createClass({
 		<TouchableElement
 		  onShowUnderlay={this.props.onHighlight}
 		  onHideUnderlay={this.props.onUnhighlight}>
-		  <View style={styles.row}>
+		  <View style={isProductAvailable ? styles.row : styles.unAvailableRow}>
 			<Image
 			  source={this.getImageSource(product)}
 			  style={styles.cellImage}
@@ -175,7 +175,13 @@ var styles = StyleSheet.create({
 	alignItems:'flex-start',
 	padding: 14,
 	height: 155
-
+  },
+  unAvailableRow: {
+	backgroundColor: 'white',
+	flexDirection: 'row',
+	alignItems:'flex-start',
+	padding: 14,
+	height: 120
   },
   productTitle: {
 	flex: 1,

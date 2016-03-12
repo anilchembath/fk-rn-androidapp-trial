@@ -25,13 +25,14 @@
   },
   "homepage": "https://github.com/anilchembath/fk-rn-androidapp-trial",
   "dependencies": {
-    "keymirror": "^0.1.1",
-    "react-native": "^0.19.0",
-    "react-timer-mixin": "^0.13.3",
     "immutable": "^3.7.6",
-    "redux": "^3.0.4",
+    "keymirror": "^0.1.1",
+    "lodash.isequal": "^4.1.1",
+    "react-native": "^0.19.0",
+    "react-native-shared": "git+ssh://git@github.com:Flipkart/react-native-shared.git#android-trial",
     "react-redux": "^3.0.1",
-    "redux-thunk": "^1.0.2",
-    "react-native-shared": "git+ssh://git@github.com:Flipkart/react-native-shared.git#android-trial"
+    "react-timer-mixin": "^0.13.3",
+    "redux": "^3.0.4",
+    "redux-thunk": "^1.0.2"
   }
 }

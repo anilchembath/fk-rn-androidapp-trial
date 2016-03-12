@@ -34,17 +34,12 @@ var CheckBox = React.createClass({
   },
 
   render() {
-    var source = require('./cb_disabled.png');
-
-    if(this.props.checked){
-      source = require('./cb_enabled.png');
-    }
-
+    var imageSource = (this.props.checked) ? 'http://img6a.flixcart.com/www/promos/new/20160312-142006-1457794192-checked-checkbox.png':'http://img5a.flixcart.com/www/promos/new/20160312-154645-checkbox.png';
     var container = (
       <View style={styles.container}>
         <Image
           style={styles.checkbox}
-          source={source}/>
+          source={{uri:imageSource}}/>
         <View style={styles.labelContainer}>
           <Text style={[styles.label, this.props.labelStyle]}>{this.props.label}</Text>
         </View>
@@ -65,7 +60,7 @@ var CheckBox = React.createClass({
     }
 
     return (
-      <TouchableHighlight onPress={this.onChange} underlayColor='white'>
+      <TouchableHighlight onPress={this.onChange} underlayColor='#E4E4E4'>
         {container}
       </TouchableHighlight>
     )
@@ -76,11 +71,14 @@ var styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    padding:15,
+    flex:1,
+
+
   },
   checkbox: {
-    width: 26,
-    height: 26
+    width: 20,
+    height: 20
   },
   labelContainer: {
     marginLeft: 10,

@@ -11,7 +11,9 @@ var {
   Text,
   View,
   Image,
-  TouchableNativeFeedback
+  TouchableNativeFeedback,
+  TouchableHighlight,
+  ScrollView
 } = React;
 import {Actions, ActionCreator} from '../../../actions';
 import Checkbox from '../../shared/checkbox/checkbox';
@@ -46,11 +48,13 @@ export default class BrowseList extends ReactComponentWithStore{
 	let actionCreator = this.getActionCreator()
 	if(this.props.facets){
 		let facets = this.props.facets;
-		let visibleFacets = facets.slice(0,7);
+		let visibleFacets = facets.slice(0,8);
+		let appliedFilters = this._getStore().getState().data.appliedFilters
 		this.setState({
 			facets: visibleFacets,
 			selectedFacet: visibleFacets[0],
-			isLoading: false
+			isLoading: false,
+			appliedFilters: appliedFilters
 		});
 	} 
   }
@@ -74,7 +78,8 @@ export default class BrowseList extends ReactComponentWithStore{
   	});
   }
   clearFilter(){
-
+  	this.getActionCreator().updateAppliedFilters({});
+  	this.props.navigator.pop();
   }
   applyFilter(){
   	this.getActionCreator().updateAppliedFilters(this.state.appliedFilters);
@@ -110,15 +115,14 @@ export default class BrowseList extends ReactComponentWithStore{
   		if(!this.state.isLoading  && this.state.facets.length > 0){
   			let selectedFacet = this.state.selectedFacet;
 			 return (<View style={styles.container}>
-			 			<View style={styles.headerStrip}>
+			 			{/*<View style={styles.headerStrip}>
 			 				<Text style={{fontSize:22, color:'#353535'}}> Filter</Text>
-			 			</View>
+			 			</View>*/}
 			 			<View style={styles.filterContainer}>
 						  	<View style={styles.leftContainer}>
 							  	 {this.state.facets.map(facet =>
-							  	 	<TouchableNativeFeedback
-								        onPress={() => this.selectFacet(facet)}
-								        background={TouchableNativeFeedback.SelectableBackground()} key = {facet.title}>
+							  	 	<TouchableHighlight
+								        onPress={() => this.selectFacet(facet)} key = {facet.title}>
 								        { facet.title === selectedFacet.title ? 
 									        <View style={styles.selectedFacet} >
 											 	<Text style= {styles.selectedFacetTitleText} numberOfLines={2}>{facet.title}</Text>
@@ -128,16 +132,21 @@ export default class BrowseList extends ReactComponentWithStore{
 											 	<Text style= {styles.facetTitleText} numberOfLines={2}>{facet.title}</Text>
 											</View>
 										}
-									</TouchableNativeFeedback>
+									</TouchableHighlight>
 								 )}
 								 <View style={styles.facetTitle} key ='More'>
 								 	<Text style= {styles.facetTitleText} numberOfLines={2}>More</Text>
 								 </View>
 						  	</View>
-						  	<View style={{flex:0.6}}>
-							  	 {selectedFacet.value.map(facet =>
-									<FilterItem facet={facet} isChecked = {this.isFilterApplied(facet,selectedFacet)} key = {facet.title} onChange={(facet)=>{ this.filterItemChange (facet, selectedFacet) }}  />
-								 )}
+						  	<View style={styles.rightContainer}>
+								<ScrollView
+						          automaticallyAdjustContentInsets={false}
+						          style={styles.scrollView}>
+								        {selectedFacet.value.map(facet =>
+											<FilterItem facet={facet} isChecked = {this.isFilterApplied(facet,selectedFacet)} key = {facet.title} onChange={(facet)=>{ this.filterItemChange (facet, selectedFacet) }}  />
+										 )}
+						        </ScrollView>
+							  	 
 						  	</View>
 						</View>
 						<View style={{height:50, flexDirection:'row'}}>
@@ -183,6 +192,11 @@ var styles = StyleSheet.create({
   	flex:0.4,
   	backgroundColor:'#454545'
   },
+  rightContainer:{
+  	flex:0.6,
+  	backgroundColor:'#ffffff',
+  	overflow:'visible'
+  },
   headerStrip:{
   	borderColor: '#E4E4E4',
 	borderBottomWidth: 1,
@@ -201,7 +215,7 @@ var styles = StyleSheet.create({
   	borderColor: '#E4E4E4',
 	borderBottomWidth: 1,
 	overflow:'hidden',
-	height:60
+	height:50
   },
   selectedFacet: {
   	backgroundColor:'#F5F4ED',
@@ -210,14 +224,14 @@ var styles = StyleSheet.create({
   	borderColor: '#E4E4E4',
 	borderBottomWidth: 1,
 	overflow:'hidden',
-	height:60
+	height:50
   },
   facetTitleText: {
-  	fontSize:18,
+  	fontSize:16,
   	color:'#ffffff'
   },
   selectedFacetTitleText: {
-  	fontSize:18,
+  	fontSize:16,
   	color:'#353535'
   },
   facetDetail:{
@@ -246,6 +260,9 @@ var styles = StyleSheet.create({
   applyFilterText: {
   	fontSize:18,
   	color:'#ffffff'
-  }
+  },
+   scrollView: {
+    height: 300,
+  },
 });
 

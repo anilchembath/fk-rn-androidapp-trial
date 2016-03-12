@@ -37,6 +37,9 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
   if (route.name === 'filter') {
     return (
       <View style={{flex: 1}}>
+         <View style={styles.headerStrip}>
+            <Text style={{fontSize:22, color:'#353535'}}> Filter</Text>
+        </View>
         <Filter navigator={navigationOperations} facets={route.facets}/>
       </View>
     );
@@ -68,3 +71,12 @@ export default class App extends ReactComponentWithStore{
     );
   }
 };
+
+var styles = StyleSheet.create({
+  headerStrip:{
+    borderColor: '#E4E4E4',
+    borderBottomWidth: 1,
+    backgroundColor:'#ffffff',
+    padding:10
+  }
+});
