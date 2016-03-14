@@ -18,6 +18,7 @@ var {
 import {Actions, ActionCreator} from '../../../actions';
 import Checkbox from '../../shared/checkbox/checkbox';
 import FilterItem from './FilterItem';
+import FilerSelectedItems from './FilerSelectedItems';
 import ReactComponentWithStore from 'react-native-shared/components/common/ReactComponentWithStore.js';
 
 
@@ -125,7 +126,7 @@ export default class BrowseList extends ReactComponentWithStore{
 								        onPress={() => this.selectFacet(facet)} key = {facet.title}>
 								        { facet.title === selectedFacet.title ? 
 									        <View style={styles.selectedFacet} >
-											 	<Text style= {styles.selectedFacetTitleText} numberOfLines={2}>{facet.title}</Text>
+											 	<Text style= {styles.selectedFacetTitleText} numberOfLines={1}>{facet.title}</Text>
 											 </View>
 											:
 											<View style={styles.facetTitle} >
@@ -134,18 +135,19 @@ export default class BrowseList extends ReactComponentWithStore{
 										}
 									</TouchableHighlight>
 								 )}
-								 <View style={styles.facetTitle} key ='More'>
+								{/* <View style={styles.facetTitle} key ='More'>
 								 	<Text style= {styles.facetTitleText} numberOfLines={2}>More</Text>
-								 </View>
+								 </View>*/}
 						  	</View>
 						  	<View style={styles.rightContainer}>
-								<ScrollView
+								{ <ScrollView
 						          automaticallyAdjustContentInsets={false}
 						          style={styles.scrollView}>
 								        {selectedFacet.value.map(facet =>
 											<FilterItem facet={facet} isChecked = {this.isFilterApplied(facet,selectedFacet)} key = {facet.title} onChange={(facet)=>{ this.filterItemChange (facet, selectedFacet) }}  />
 										 )}
-						        </ScrollView>
+						        </ScrollView>}
+						    {/*<FilerSelectedItems selectedFacet= {selectedFacet} filterItemChange = {this.filterItemChange} appliedFilters={this.state.appliedFilters} />*/}
 							  	 
 						  	</View>
 						</View>
@@ -211,10 +213,12 @@ var styles = StyleSheet.create({
   facetTitle: {
   	backgroundColor:'#454545',
   	alignItems: 'center',
-	justifyContent: 'center',
+  	justifyContent: 'center',
   	borderColor: '#E4E4E4',
 	borderBottomWidth: 1,
 	overflow:'hidden',
+	paddingLeft:5,
+	paddingRight:5,
 	height:50
   },
   selectedFacet: {
@@ -224,6 +228,8 @@ var styles = StyleSheet.create({
   	borderColor: '#E4E4E4',
 	borderBottomWidth: 1,
 	overflow:'hidden',
+	paddingLeft:5,
+	paddingRight:5,
 	height:50
   },
   facetTitleText: {

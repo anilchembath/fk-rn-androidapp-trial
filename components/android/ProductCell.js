@@ -26,7 +26,7 @@ var {
   View
 } = React;
 
-
+var NavigationModule = require('../../nativemodules/Navigation');
 var ProductCell = React.createClass({
   getTextFromScore: function(score: number): string {
 	return score > 0 ? score + '%' : 'N/A';
@@ -70,6 +70,13 @@ var ProductCell = React.createClass({
   getAvailabilityIntent: function(product){
 	 return product.availability &&  product.availability.intent  ? product.availability.intent : "";
   },
+  selectProduct(){
+  	let productAction= this.props.action;
+  	NavigationModule.navigate(JSON.stringify(productAction));
+  },
+  hasOffer(product){
+  	return product.flags && product.flags.enableOfferTag;
+  },
 
   render: function() {
    // var criticsScore = this.props.movie.ratings.critics_score;
@@ -77,6 +84,7 @@ var ProductCell = React.createClass({
    let sellingPrice = this.getSellingPrice(product);
    let finalPrice = this.getFinalPrice(product);
    let dicount = this.getFinalDiscount(product);
+   let hasOffer = this.hasOffer(product);
    let isProductAvailable = this.isProductAvailable(product);
    	var TouchableElement = TouchableHighlight;
 	if (Platform.OS === 'android') {
@@ -86,13 +94,20 @@ var ProductCell = React.createClass({
 	  <View>
 		<TouchableElement
 		  onShowUnderlay={this.props.onHighlight}
-		  onHideUnderlay={this.props.onUnhighlight}>
+		  onHideUnderlay={this.props.onUnhighlight} onPress = {this.selectProduct}>
 		  <View style={isProductAvailable ? styles.row : styles.unAvailableRow}>
-			<Image
-			  source={this.getImageSource(product)}
-			  style={styles.cellImage}
-			  resizeMode={Image.resizeMode.contain}
-			/>
+		  	<View>
+				<Image
+				  source={this.getImageSource(product)}
+				  style={styles.cellImage}
+				  resizeMode={Image.resizeMode.contain}/>
+					{isProductAvailable && hasOffer ? 
+						<View style={styles.offer}>
+							<Text style={styles.offerText}>OFFER </Text>
+						</View>
+						: null
+					}
+			</View>
 			<View style={styles.textContainer}>
 			  <View >
 				<Text style={styles.productTitle} numberOfLines={1}>
@@ -112,7 +127,7 @@ var ProductCell = React.createClass({
 					<View style={{flex:1,flexDirection:'row'}}>
 					
 						<Text style={styles.productPrize}   numberOfLines={1}>
-						  {finalPrice}
+						  Rs. {finalPrice}
 						</Text>
 						 {dicount>0 ?
 							<Text style={styles.totalDiscount}   numberOfLines={1}>
@@ -121,7 +136,17 @@ var ProductCell = React.createClass({
 						   : null
 						 }
 					  </View>
-					  {product.rating ? 
+					  {product.tags ? 
+					   <View style={{flex:1,flexDirection:'row'}}>
+						{product.tags.map(tag =>
+							<View key={tag} style={styles.tags}>
+								<Text style={styles.tagText}>{tag} </Text>
+							</View>
+						  )}
+					   </View>
+					   : null
+					  }
+					   {product.rating  && product.rating.count>0 ? 
 					  	<View style={{flex:1, flexDirection:'row'}}> 
 							<View style={{height:20,overflow:'hidden',width:100,marginBottom:10, }}>
 								<View style={styles.ratingContainer}><Text  style={styles.rating}>&#9733;&#9733;&#9733;&#9733;&#9733;</Text></View>
@@ -132,16 +157,6 @@ var ProductCell = React.createClass({
 							</View>
 						</View>
 						: null }
-					  {product.tags ? 
-					   <View style={{flex:1,flexDirection:'row'}}>
-						{product.tags.map(tag =>
-							<View key={tag} style={styles.tags}>
-								<Text>{tag} </Text>
-							</View>
-						  )}
-					   </View>
-					   : null
-					  }
 					
 					   
 				  </View>
@@ -169,6 +184,14 @@ var styles = StyleSheet.create({
 	alignItems:'flex-start',
 	paddingLeft: 20
   },
+  cellImage: {
+	backgroundColor: 'transparent',
+	height: 80,
+	marginRight: 10,
+	marginTop: 10,
+	marginLeft: 10,
+	width: 50,
+  },
   row: {
 	backgroundColor: 'white',
 	flexDirection: 'row',
@@ -195,6 +218,7 @@ var styles = StyleSheet.create({
 	flex: 1,
 	fontSize: 18,
 	fontFamily: 'RobotoBold',
+	fontWeight: 'bold',
   },
   availabilityMessage: {
 	flex: 1,
@@ -224,10 +248,33 @@ var styles = StyleSheet.create({
   },
   tags:{
 	flex:1,
-	padding:5,
+	padding:2,
 	marginRight:5,
 	borderColor: '#E4E4E4',
-	borderWidth: 1
+	borderWidth: 1,
+	marginTop:5,
+	marginBottom:5,
+  },
+  tagText:{
+	fontSize:12
+  },
+  offer:{
+	flex:1,
+	paddingLeft:5,
+	paddingTop:3,
+	paddingBottom:3,
+	paddingRight:5,
+	marginRight:5,
+	marginLeft:10,
+	marginTop:10,
+	marginBottom:5,
+	backgroundColor:'#70AC79'
+
+  },
+  offerText:{
+	fontSize:12,
+	color:'#ffffff',
+	fontWeight: 'bold',
   },
   ratingContainer: {
 	left:0,
@@ -248,18 +295,9 @@ var styles = StyleSheet.create({
   },
   totalDiscount: {
 	fontFamily: 'Roboto',
-	
 	marginLeft:20,
 	fontSize:14,
 	color:'green'
-  },
-  cellImage: {
-	backgroundColor: 'transparent',
-	height: 80,
-	marginRight: 10,
-	marginTop: 10,
-	marginLeft: 10,
-	width: 50,
   },
   cellBorder: {
 	backgroundColor: 'rgba(0, 0, 0, 0.1)',

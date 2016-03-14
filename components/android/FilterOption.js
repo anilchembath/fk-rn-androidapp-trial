@@ -36,7 +36,7 @@ export default class FilterOption extends React.Component{
 				background={TouchableNativeFeedback.SelectableBackground()}>
 				{appliedFilterLength >0 ?
 					<View style={styles.filter}>
-						<View><Text style={styles.appliedFilterText}>Filter</Text></View>
+						<View><Text style={styles.appliedFilterText}>Filtered By</Text></View>
 						<View style={{flexDirection:'row'}}>
 							{Object.keys(appliedFilters).map((filter, index) => {
 									return <Text style={styles.appliedFacetText} key={"ApliedFilter_" + filter}>  {filter} {index+1 !== appliedFilterLength ? ',' : '' }</Text>;

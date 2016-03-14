@@ -106,6 +106,7 @@ export default class BrowseList extends ReactComponentWithStore{
 		   for(let porductId in productList){
 			products[porductId]  = productList[porductId];
 		  }
+		  console.log(products);
 		  let updatedState = {
 			products: products,
 			search:newState.data.search,
@@ -162,7 +163,7 @@ export default class BrowseList extends ReactComponentWithStore{
 	}
 	  return (
 		<View  style={{alignItems: 'center'}}>
-		  <ProgressBarAndroid styleAttr="Small"/>
+		  <ProgressBarAndroid xstyleAttr="Small"/>
 		</View>
 	  );
   }
@@ -187,13 +188,15 @@ export default class BrowseList extends ReactComponentWithStore{
 	rowID: number | string,
 	highlightRowFunc: (sectionID: ?number | string, rowID: ?number | string) => void,) {
 	let productData = product.value;
+	let productAction= product.action;
 	return (
 	  <ProductCell
 		key={productData.id}
 		
 		onHighlight={() => highlightRowFunc(sectionID, rowID)}
 		onUnhighlight={() => highlightRowFunc(null, null)}
-		product={productData} />
+		product={productData}
+		action = {productAction} />
 	);
   }
   selectFilter(){
