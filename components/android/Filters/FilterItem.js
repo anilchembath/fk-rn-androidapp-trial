@@ -35,34 +35,22 @@ export default class BrowseList extends React.Component{
   		let label  = facet.title + "  (" + facet.count + " results)";
   		if(this.props.facet){
   			 return (<View 	style={styles.facetDetail} key = {facet.title}>
-				 	<Checkbox label = {label} checked={this.state.isChecked} onChange= {this.onChange.bind(this)}  />
-				 	{/* <Text style= {{fontSize:14}} numberOfLines={1} >{facet.title} </Text>
-				 	<Text style= {{fontSize:14}}></Text> */}
-				 </View>);
-  		}
+				   	<Checkbox label = {label} checked={this.state.isChecked} onChange= {this.onChange.bind(this)}  />
+				  </View>); qew
+  		} 
   		return (<View style={styles.container}/>);
   		
   }
 };
 var styles = StyleSheet.create({
   container: {
-	flex: 1,
-	backgroundColor: 'white'
-  },
-  filterContainer: {
-	flex: 1,
-	backgroundColor: 'white',
-	flexDirection:'row'
-  },
-  loader: {
-	alignItems: 'center',
-	justifyContent: 'center',
-	flexDirection: 'row',
+  	backgroundColor: 'white'
 
   },
   facetDetail:{
-  	padding:15, 
-  	flexDirection:'row'
+  	flexDirection:'row',
+    borderColor: '#E4E4E4',
+    borderBottomWidth: 1,
   }
 });
 

@@ -6,7 +6,8 @@ let initialState = {
     search:{
         "sortOptions" : [],
         "facetResponseList": []
-    }
+    },
+    appliedFilters:{}
 };
 
 function productList(state = initialState, action = null){
@@ -21,7 +22,11 @@ function productList(state = initialState, action = null){
             break;
         case Actions.GET_PRODUCTS_FAILURE:
             let error = action.error;
-            state = state.set('productList', error);
+            state = state.set('error', error);
+            break;
+        case Actions.UPDATE_APPLIED_FILTERS:
+            let appliedFilters = action.data;
+            state = state.set('appliedFilters', appliedFilters);
             break;
     }
     return state.toJS();
