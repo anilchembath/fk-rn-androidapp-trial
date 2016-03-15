@@ -147,8 +147,7 @@ export default class BrowseList extends ReactComponentWithStore{
 											<FilterItem facet={facet} isChecked = {this.isFilterApplied(facet,selectedFacet)} key = {facet.title} onChange={(facet)=>{ this.filterItemChange (facet, selectedFacet) }}  />
 										 )}
 						        </ScrollView>}
-						    {/*<FilerSelectedItems selectedFacet= {selectedFacet} filterItemChange = {this.filterItemChange} appliedFilters={this.state.appliedFilters} />*/}
-							  	 
+						    	{/*<FilerSelectedItems selectedFacet= {selectedFacet} filterItemChange = {this.filterItemChange} appliedFilters={this.state.appliedFilters} />*/}
 						  	</View>
 						</View>
 						<View style={{height:50, flexDirection:'row'}}>
