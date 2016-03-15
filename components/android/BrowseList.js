@@ -52,7 +52,7 @@ export default class BrowseList extends ReactComponentWithStore{
 
 		}),
 		startIndex: 0,
-		product_count: 15,
+		product_count: 10,
 		products : [],
 		hasMoreRecords: true,
 		sortOptions:'',

@@ -105,6 +105,9 @@ export default class BrowseList extends ReactComponentWithStore{
   		appliedFilters: appliedFilters
   	});
   }
+  getAppliedFilters(){
+  	return this.state.appliedFilters;
+  }
 
   isFilterApplied(facet, parentFacet){
   	if(facet.resource.selected || ( this.state.appliedFilters[parentFacet.title] && this.state.appliedFilters[parentFacet.title][facet.title])){
@@ -140,14 +143,15 @@ export default class BrowseList extends ReactComponentWithStore{
 								 </View>*/}
 						  	</View>
 						  	<View style={styles.rightContainer}>
-								{ <ScrollView
+								{/* <ScrollView
 						          automaticallyAdjustContentInsets={false}
 						          style={styles.scrollView}>
 								        {selectedFacet.value.map(facet =>
 											<FilterItem facet={facet} isChecked = {this.isFilterApplied(facet,selectedFacet)} key = {facet.title} onChange={(facet)=>{ this.filterItemChange (facet, selectedFacet) }}  />
 										 )}
-						        </ScrollView>}
-						    	{/*<FilerSelectedItems selectedFacet= {selectedFacet} filterItemChange = {this.filterItemChange} appliedFilters={this.state.appliedFilters} />*/}
+						        </ScrollView>*/}
+						    	<FilerSelectedItems selectedFacet= {selectedFacet} filterItemChange = {this.filterItemChange} 
+						    		getAppliedFilters={this.getAppliedFilters.bind(this)} />
 						  	</View>
 						</View>
 						<View style={{height:50, flexDirection:'row'}}>

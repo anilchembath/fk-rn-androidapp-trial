@@ -49,30 +49,38 @@ componentDidMount() {
 			selectedFacet: this.props.selectedFacet,
 			visibleFacets: visibleFacets,
 			startIndex: visibleFacets.length,
-			hasMoreRecords: facets.length > visibleFacets.length
+			hasMoreRecords: facets.length > visibleFacets.length,
+			appliedFilters: this.props.getAppliedFilters()
 		});
 	} 
   }
+
   filterItemChange(facet,parentFacet){
-  	var appliedFilters = this.state.appliedFilters;
-  	if(!appliedFilters[parentFacet.title]){
-		appliedFilters[parentFacet.title] = {};
-  	}
-  	var filter = appliedFilters[parentFacet.title];
-  	if(!filter[facet.title]){
-  		filter[facet.title] = facet.resource.params;
-  	}else {
-  		delete filter[facet.title];
-  	}
-  	if(Object.keys(filter).length === 0){
-  		delete appliedFilters[parentFacet.title];
-  	}
-  	this.setState({
-  		appliedFilters: appliedFilters
-  	});
+	  	var appliedFilters = this.state.appliedFilters;
+	  	if(!appliedFilters[parentFacet.title]){
+			appliedFilters[parentFacet.title] = {};
+	  	}
+	  	var filter = appliedFilters[parentFacet.title];
+	  	if(!filter[facet.title]){
+	  		filter[facet.title] = facet.resource.params;
+	  	}else {
+	  		delete filter[facet.title];
+	  	}
+	  	if(Object.keys(filter).length === 0){
+	  		delete appliedFilters[parentFacet.title];
+	  	}
+
+	  	this.setState({
+	  		appliedFilters: appliedFilters
+	  	});
+
+	  	if(this.props.filterItemChange){
+	  		this.props.filterItemChange(facet,parentFacet)
+	  	}
   }
+
  isFilterApplied(facet, parentFacet){
-	if(facet.resource.selected || ( this.props.appliedFilters[parentFacet.title] && this.props.appliedFilters[parentFacet.title][facet.title])){
+	if(facet.resource.selected || ( this.state.appliedFilters[parentFacet.title] && this.state.appliedFilters[parentFacet.title][facet.title])){
 		return true;
 	} 
 	return false;
@@ -93,20 +101,22 @@ componentDidMount() {
 	   	});
 	}
   }
-  componentWillReceiveProps (props) {
+  componentWillReceiveProps (props) {	
   		let facets = props.selectedFacet.value;
   		if(facets && facets.length > 0){
-			let visibleFacets = facets.length > this.state.filterCount ? facets.slice(0,this.state.filterCount) : facets;
-			let currentFacet = this.state.facets;
-			this.setState({
-				facets: props.selectedFacet,
-				visibleFacets: visibleFacets,
-				startIndex: visibleFacets.length,
-				hasMoreRecords: facets.length > visibleFacets.length
-			},()=>{
-				// if(currentFacet.title !== props.selectedFacet.title )
-				// 	this.refs['Listview'].scrollResponderScrollTo(0,0);
-			});
+  			let currentFacet = this.state.facets;
+  			if(currentFacet.title !== props.selectedFacet.title){
+				let visibleFacets = facets.length > this.state.filterCount ? facets.slice(0,this.state.filterCount) : facets;
+				
+				this.setState({
+					facets: props.selectedFacet,
+					visibleFacets: visibleFacets,
+					startIndex: visibleFacets.length,
+					hasMoreRecords: facets.length > visibleFacets.length
+				},()=>{
+					this.refs['Listview'].scrollResponderScrollTo(0,0);
+				});
+			}
 		}
 	}
 
