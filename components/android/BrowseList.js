@@ -106,7 +106,6 @@ export default class BrowseList extends ReactComponentWithStore{
 		   for(let porductId in productList){
 			products[porductId]  = productList[porductId];
 		  }
-		  console.log(products);
 		  let updatedState = {
 			products: products,
 			search:newState.data.search,
@@ -162,8 +161,8 @@ export default class BrowseList extends ReactComponentWithStore{
 	  return <View style={styles.scrollSpinner} />;
 	}
 	  return (
-		<View  style={{alignItems: 'center'}}>
-		  <ProgressBarAndroid xstyleAttr="Small"/>
+		<View  style={{alignItems: 'center', height:20}}>
+		 {/* <ProgressBarAndroid xstyleAttr="Small"/>*/}
 		</View>
 	  );
   }
@@ -217,7 +216,9 @@ export default class BrowseList extends ReactComponentWithStore{
 	 	 content =  <NoProducts/>
 	 } else {
 	 	content = <ListView
-		  ref="listview"
+		  ref="listview" 
+		  initialListSize={1}
+		  pageSize={2}
 		  renderSeparator={this.renderSeparator.bind(this)}
 		  dataSource={this.getDataSource(this.state.products)}
 		  renderRow={this.renderRow.bind(this)}
