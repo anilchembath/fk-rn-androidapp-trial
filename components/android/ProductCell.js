@@ -34,9 +34,9 @@ var ProductCell = React.createClass({
   getImageSource: function(product: Object): {uri: ?string} {
 	var uri = product && product.media && product.media.images ? product.media.images[0].url : null;
 	if (uri) {
-		uri = uri.replace("{@width}", "200");
-		uri = uri.replace("{@height}", "200");
-		uri = uri.replace("{@quality}", "80");
+		uri = uri.replace("{@width}", "300");
+		uri = uri.replace("{@height}", "300");
+		uri = uri.replace("{@quality}", "100");
 	}
 	return { uri };
   },
@@ -99,6 +99,7 @@ var ProductCell = React.createClass({
 		  	<View>
 				<Image
 				  source={this.getImageSource(product)}
+				  loadingIndicatorSource = {{uri:'fk_default_image'}}
 				  style={styles.cellImage}
 				  resizeMode={Image.resizeMode.contain}/>
 					{isProductAvailable && hasOffer ? 
@@ -186,44 +187,45 @@ var styles = StyleSheet.create({
   },
   cellImage: {
 	backgroundColor: 'transparent',
-	height: 80,
-	marginRight: 10,
-	marginTop: 10,
+	height: 120,
+	marginRight: 0,
 	marginLeft: 10,
-	width: 50,
+	width: 70,
   },
   row: {
 	backgroundColor: 'white',
 	flexDirection: 'row',
 	alignItems:'flex-start',
 	padding: 14,
-	height: 155
+	height: 150
   },
   unAvailableRow: {
 	backgroundColor: 'white',
 	flexDirection: 'row',
 	alignItems:'flex-start',
 	padding: 14,
-	height: 120
+	height: 150
   },
   productTitle: {
 	flex: 1,
 	fontSize: 14,
 	//fontWeight: 'bold',
 	overflow:'hidden',
-	fontFamily: 'RobotoBold',
-	marginBottom: 5
+	fontFamily: 'sans-serif',
+	marginBottom: 2,
+	color:'#353535'
   },
   productPrize: {
 	flex: 1,
 	fontSize: 18,
-	fontFamily: 'RobotoBold',
+	fontFamily: 'sans-serif',
+	color:'#353535',
 	fontWeight: 'bold',
   },
   availabilityMessage: {
 	flex: 1,
 	fontSize: 14,
-	fontFamily: 'RobotoBold',
+	fontFamily: 'sans-serif',
 	marginBottom: 5
   },
   negative: {
@@ -233,18 +235,17 @@ var styles = StyleSheet.create({
 	color:'green'
   },
   subTitle: {
-	//color: '#333333',
-	//fontFamily: 'Roboto',
+	fontFamily: 'sans-serif',
+	color:'#353535',
 	marginBottom:5,
 	fontSize: 12,
   },
   specialPrice: {
-	color: '#333333',
-	fontFamily: 'Roboto',
 	marginLeft:10,
 	fontSize:18,
+	fontFamily: 'sans-serif',
+	color:'#353535',
 	textDecorationLine: 'line-through'
-
   },
   tags:{
 	flex:1,
@@ -256,24 +257,30 @@ var styles = StyleSheet.create({
 	marginBottom:5,
   },
   tagText:{
-	fontSize:12
+	fontSize:12,
+	fontFamily: 'sans-serif',
+	color:'#353535',
   },
   offer:{
 	flex:1,
-	paddingLeft:5,
+	paddingLeft:8,
 	paddingTop:3,
 	paddingBottom:3,
-	paddingRight:5,
+	paddingRight:8,
 	marginRight:5,
-	marginLeft:10,
+	marginLeft:7,
 	marginTop:10,
 	marginBottom:5,
-	backgroundColor:'#70AC79'
+	backgroundColor:'#70AC79',
+	position:'absolute',
+	left:10,
+	bottom:0
 
   },
   offerText:{
 	fontSize:12,
 	color:'#ffffff',
+	fontFamily: 'sans-serif',
 	fontWeight: 'bold',
   },
   ratingContainer: {
@@ -287,6 +294,8 @@ var styles = StyleSheet.create({
 	fontSize:18
   },
   ratingText: {
+  	fontFamily: 'sans-serif',
+	color:'#353535',
   	fontSize: 12 
   },
   ratingSelected:{

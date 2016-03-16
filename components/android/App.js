@@ -46,6 +46,18 @@ var RouteMapper = function(route, navigationOperations, onComponentRef) {
   } else if (route.name === 'browse') {
     return (
       <View style={{flex: 1}}>
+       <View style={styles.flipkartHeader}>
+         {/* <View style={styles.backButton}>
+              <Image
+              style={styles.backlogo}
+              source={{uri:'back'}}/>
+          </View>*/}
+          <View style={styles.flipkartLogo}>
+            <Image
+              style={styles.logo}
+              source={{uri:'logo'}}/>
+          </View>
+        </View>
         <ListPage
           style={{flex: 1}}
           navigator={navigationOperations}
@@ -78,5 +90,30 @@ var styles = StyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor:'#ffffff',
     padding:10
+  },
+  flipkartHeader:{
+    backgroundColor:'#4279D4',
+    height:50,
+    paddingLeft:20,
+    paddingTop:10,
+    flexDirection:'row'
+  },
+  logo:{
+    height:30,
+    width:30,
+  },
+  flipkartLogo:{
+    height:30,
+    width:30
+  },
+  backButton:{
+    marginRight:10,
+    height:20,
+    width:20,
+  },
+  backlogo:{
+    backgroundColor:'#ffffff',
+    height:20,
+    width:20,
   }
 });
